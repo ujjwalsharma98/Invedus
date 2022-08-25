@@ -1,8 +1,8 @@
-import React from 'react';  
+import React from 'react';
 import Header from './components/header'
 import Footer from './components/footer'
 
-import { Route, Routes } from 'react-router-dom' 
+import { Route, Routes } from 'react-router-dom'
 import Home from './pages/home'
 import Contact from './pages/add-edit-contact'
 
@@ -13,14 +13,12 @@ function App() {
       <Home />
       <Contact />
 
-          <Routes>
-            <Route path="/" component={<Home />} />  
-            <Route path="add" component={<Contact />} />  
-            <Route path="edit/:id" component={<Contact />} /> 
-          </Routes>
-
-          
-          </div>
+      <Routes>
+        <Route path="/" component={<Home />} />
+        <Route path="add" component={<Contact />} />
+        <Route path="edit/:id" component={<Contact />} />
+      </Routes>
+    </div>
   );
 }
 

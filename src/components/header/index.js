@@ -1,5 +1,4 @@
 import React from 'react'
-// import { withRouter } from 'react-router-dom';
 import { AppBar, Toolbar, Typography } from '@material-ui/core';
 
 const Header = () => {
@@ -12,5 +11,4 @@ const Header = () => {
     )
 }
 
-// export default withRouter(Header)
 export default Header

@@ -1,5 +1,4 @@
 import React from 'react'
-// import { withRouter } from 'react-router-dom';
 import { BottomNavigation, BottomNavigationAction } from '@material-ui/core';
 import FolderIcon from '@mui/icons-material/Folder';
 import RestoreIcon from '@mui/icons-material/Restore';
@@ -8,16 +7,13 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 
 const Footer = () => {
 
-    // const [value, setValue] = useState('recents');
-
   const handleChange = () => {
-    // setValue(newValue);
+
   };
 
-    return (
-        <BottomNavigation sx={{ width: 500 }} 
-        // value={value} 
-        onChange={handleChange}>
+  return (
+    <BottomNavigation sx={{ width: 500 }}
+      onChange={handleChange}>
       <BottomNavigationAction
         label="Recents"
         value="recents"
@@ -35,8 +31,7 @@ const Footer = () => {
       />
       <BottomNavigationAction label="Folder" value="folder" icon={<FolderIcon />} />
     </BottomNavigation>
-    )
+  )
 }
 
-// export default withRouter(Footer)
 export default Footer

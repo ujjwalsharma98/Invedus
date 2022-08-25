@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
@@ -48,100 +48,96 @@ const Contact = () => {
 
     const addContact = async () => {
         setLoader(true)
-        let {userName,phone,type,isWhatsApp} = values
+        let { userName, phone, type, isWhatsApp } = values
         let url = await handleUpload()
-            let payload = {
-                userName,image : url,phone,type,isWhatsApp
-            }
-            let initialList = JSON.parse(localStorage.getItem('contactList')) || []
-            let updatedList = [ ...initialList, payload]
-            localStorage.setItem("contactList", JSON.stringify(updatedList));
-            setLoader(false)
+        let payload = {
+            userName, image: url, phone, type, isWhatsApp
+        }
+        let initialList = JSON.parse(localStorage.getItem('contactList')) || []
+        let updatedList = [...initialList, payload]
+        localStorage.setItem("contactList", JSON.stringify(updatedList));
+        setLoader(false)
+        setValues(initialValue)
     }
 
     function handleChangeFile(e) {
         if (e.target.files[0])
             setFile(e.target.files[0]);
-      }
+    }
 
     async function handleUpload(e) {
-        // e.preventDefault();
-        debugger
         const path = `/images/${file.name}`;
         const ref = storage.ref(path);
         await ref.put(file);
         const url = await ref.getDownloadURL();
         setFile(null);
-        console.log("URL >>>", url)
         return url
     }
 
     return (
         <Box
-      component="form"
-      sx={{
-        '& .MuiTextField-root': { m: 1, width: '25ch' },
-      }}
-      noValidate
-      autoComplete="off"
-    >
-      <div>
-        <TextField
-          required
-          label="Name"
-          name='userName'
-          value={values.userName}
-          onChange={(e) => handleChange(e)}
-        />
-        <TextField
-          required
-          label="Phone Number"
-          type="number"
-          name='phone'
-          value={values.phone}
-          onChange={(e) => handleChange(e)}
-        />
-        </div>
+            component="form"
+            sx={{
+                '& .MuiTextField-root': { m: 1, width: '25ch' },
+            }}
+            noValidate
+            autoComplete="off"
+        >
+            <div>
+                <TextField
+                    required
+                    label="Name"
+                    name='userName'
+                    value={values.userName}
+                    onChange={(e) => handleChange(e)}
+                />
+                <TextField
+                    required
+                    label="Phone Number"
+                    type="number"
+                    name='phone'
+                    value={values.phone}
+                    onChange={(e) => handleChange(e)}
+                />
+            </div>
 
-        <div>
+            <div>
+                <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Type</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        name='type'
+                        value={values.type}
+                        label="Type"
+                        onChange={(e) => handleChange(e)}
+                    >
+                        <MenuItem value={1}>personal</MenuItem>
+                        <MenuItem value={2}>office</MenuItem>
+                    </Select>
+                </FormControl>
 
-        <FormControl fullWidth>
-  <InputLabel id="demo-simple-select-label">Type</InputLabel>
-  <Select
-    labelId="demo-simple-select-label"
-    id="demo-simple-select"
-    name='type'
-    value={values.type}
-    label="Type"
-    onChange={(e) => handleChange(e)}
-  >
-    <MenuItem value={1}>personal</MenuItem>
-    <MenuItem value={2}>office</MenuItem>
-  </Select>
-</FormControl>
+                <FormControlLabel
+                    label="Available on whatsapp"
+                    control={
+                        <Checkbox
+                            name='isWhatsApp'
+                            value={values.isWhatsApp}
+                            onChange={(e) => handleChange(e)}
+                            inputProps={{ 'aria-label': 'controlled' }}
+                        />
+                    }
+                />
+            </div>
 
-<FormControlLabel
-  label="Available on whatsapp"
-  control={
-<Checkbox
-        name='isWhatsApp'
-      value={values.isWhatsApp}
-      onChange={(e) => handleChange(e)}
-      inputProps={{ 'aria-label': 'controlled' }}
-    />
-}
-/>
+            <input
+                type="file"
+                onChange={handleChangeFile}
+            />
 
-        </div>
+            <Button variant="contained" onClick={() => addContact()}>Submit</Button>
 
-        <input 
-          type="file"
-          onChange={handleChangeFile}
-        />
-
-        <Button variant="contained" onClick={() => addContact()}>Submit</Button>
-
-        {loader && <CircularProgress />}
+            {loader && <CircularProgress />}
 
         </Box>
     )

@@ -4,17 +4,18 @@ import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Select from '@mui/material/Select';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
+import validator from 'validator'
 import { storage } from '../../firebase';
 
 let initialValue = {
     userName: '',
     image: '',
-    phone: '',
+    phone: null,
     type: 1,
     isWhatsApp: false
 }
@@ -43,6 +44,13 @@ const Contact = () => {
                 ...values,
                 [name]: value
             })
+        }
+    }
+
+    const validatePhoneNumber = (number) => {
+        if (number != null) {
+            const isValidPhoneNumber = validator.isMobilePhone(number)
+            return (isValidPhoneNumber)
         }
     }
 
@@ -96,6 +104,9 @@ const Contact = () => {
                     label="Phone Number"
                     type="number"
                     name='phone'
+                    helperText={(validatePhoneNumber(values.phone) || values.phone == null)  ? '' : 'Invalid'}
+                    id="outlined-error-helper-text"
+                    error={(validatePhoneNumber(values.phone) || values.phone == null) ? false : true}
                     value={values.phone}
                     onChange={(e) => handleChange(e)}
                 />
@@ -135,7 +146,7 @@ const Contact = () => {
                 onChange={handleChangeFile}
             />
 
-            <Button variant="contained" onClick={() => addContact()}>Submit</Button>
+            <Button variant="contained" disabled={!file || (!validatePhoneNumber(values.phone))} onClick={() => addContact()}>Submit</Button>
 
             {loader && <CircularProgress />}
 

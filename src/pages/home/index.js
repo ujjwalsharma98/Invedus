@@ -20,8 +20,8 @@ const Home = () => {
                 )
             }
         },
-        { field: 'userName', headerName: 'Name', width: 130 },
-        { field: 'phone', headerName: 'Phone', width: 130, type: 'number', },
+        { field: 'userName', headerName: 'Name', width: 150 },
+        { field: 'phone', headerName: 'Phone', width: 150, type: 'number', },
         {
             field: 'type',
             headerName: 'Type',
@@ -35,7 +35,7 @@ const Home = () => {
         {
             field: 'actions',
             headerName: 'Actions',
-            width: 2200,
+            width: 150,
             renderCell: (params) => {
                 return (
                     <div>
@@ -55,14 +55,13 @@ const Home = () => {
 
     const getUpdatedList = () => {
         let list = JSON.parse(localStorage.getItem('contactList'))
-        let mappedList = list?.map((contact, index) => ({ ...contact, id: index, isWhatsApp: contact.isWhatsApp ? 'Yes' : 'No', type: contact.type == 1 ? 'Personal' : 'office' })) || []
+        let mappedList = list?.map((contact, index) => ({ ...contact, id: Number(index)+1, isWhatsApp: contact.isWhatsApp ? 'Yes' : 'No', type: contact.type == 1 ? 'Personal' : 'office' })) || []
         setContactList(mappedList)
     }
 
     console.log({ contactList })
 
     const deleteItem = (id) => {
-        console.log('id >>>', id)
         let filteredArray = contactList.filter(item => item.id != id)
         localStorage.setItem("contactList", JSON.stringify(filteredArray));
         getUpdatedList()
@@ -73,7 +72,7 @@ const Home = () => {
     }
 
     return (
-        <div style={{ height: 400, width: '100%' }}>
+        <div style={{ height: 400, width: 800 }}>
 
             <div>
                 <Button variant="contained" onClick={() => { }}>Add Contact</Button>

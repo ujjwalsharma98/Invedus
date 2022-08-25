@@ -15,8 +15,8 @@ function App() {
 
       <Routes>
         <Route path="/" component={<Home />} />
-        <Route path="add" component={<Contact />} />
-        <Route path="edit/:id" component={<Contact />} />
+        <Route path="/add-contact" component={<Contact />} />
+        <Route path="/edit-contact/:id" component={<Contact />} />
       </Routes>
     </div>
   );

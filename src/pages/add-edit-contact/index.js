@@ -10,6 +10,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import validator from 'validator'
+import { useLocation } from 'react-router-dom';
 import { storage } from '../../firebase';
 
 let initialValue = {
@@ -21,6 +22,10 @@ let initialValue = {
 }
 
 const Contact = () => {
+
+    const location = useLocation();
+
+    console.log(location.pathname);
 
     const [values, setValues] = useState(initialValue)
     const [file, setFile] = useState(null);
@@ -113,7 +118,7 @@ const Contact = () => {
             </div>
 
             <div>
-                <FormControl fullWidth>
+                <FormControl style={{minWidth: 210}}>
                     <InputLabel id="demo-simple-select-label">Type</InputLabel>
                     <Select
                         labelId="demo-simple-select-label"

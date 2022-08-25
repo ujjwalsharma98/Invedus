@@ -3,8 +3,13 @@ import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid'
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { useLocation } from 'react-router-dom';
 
 const Home = () => {
+
+    const location = useLocation();
+
+    console.log(location.pathname);
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },

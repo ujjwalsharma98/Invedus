@@ -12,6 +12,7 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import validator from 'validator'
 import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { v4 as uuidV4 } from 'uuid';
 import { storage } from '../../firebase';
 
 let initialValue = {
@@ -27,21 +28,20 @@ export const Contact = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { id } = useParams();
+    let uniqId = uuidV4()
 
     const [values, setValues] = useState(initialValue)
     const [file, setFile] = useState(null);
     const [loader, setLoader] = useState(false);
     const [editPage, setEditPage] = useState(false)
 
-    // console.log("Looooo", values);
+    console.log("Looooo", values);
 
     useEffect(() => {
         if (location.pathname?.includes('edit')) {
             setEditPage(true)
-
-            let dataEdit = JSON.parse(localStorage.getItem('contactList'))  
-            setValues(dataEdit[0])
-            console.log("REACHED >>>", id, dataEdit)
+            let dataEdit = JSON.parse(localStorage.getItem('contactList'))?.filter(item => item.id == id)[0]
+            setValues(dataEdit)
         }
     }, [])
 
@@ -75,14 +75,25 @@ export const Contact = () => {
 
     const addContact = async () => {
         setLoader(true)
-        let { userName, phone, type, isWhatsApp } = values
-        let url = await handleUpload()
-        let payload = {
-            userName, image: url, phone, type, isWhatsApp
+        if (editPage) {
+            let { userName, phone, type, isWhatsApp } = values
+            let filteredItemToBeUsed = JSON.parse(localStorage.getItem('contactList'))?.filter(item => item.id != id)
+            let removedItem = JSON.parse(localStorage.getItem('contactList'))?.filter(item => item.id != id)[0]
+            let payload = {
+                userName, phone, type, isWhatsApp, id, image: removedItem?.image
+            }
+            filteredItemToBeUsed.push(payload)
+            localStorage.setItem("contactList", JSON.stringify(filteredItemToBeUsed));
+        } if (!editPage) {
+            let { userName, phone, type, isWhatsApp } = values
+            let url = await handleUpload()
+            let payload = {
+                userName, image: url, phone, type, isWhatsApp, id: uniqId
+            }
+            let initialList = JSON.parse(localStorage.getItem('contactList')) || []
+            let updatedList = [...initialList, payload]
+            localStorage.setItem("contactList", JSON.stringify(updatedList));
         }
-        let initialList = JSON.parse(localStorage.getItem('contactList')) || []
-        let updatedList = [...initialList, payload]
-        localStorage.setItem("contactList", JSON.stringify(updatedList));
         setLoader(false)
         setValues(initialValue)
         navigate(`/`)
@@ -114,7 +125,7 @@ export const Contact = () => {
             <div>
                 <Button variant="contained" onClick={() => navigate(`/`)}>Go Back</Button>
             </div>
-            <Paper elevation={12} style={{ padding: '20px', marginTop: '20px'}} >
+            <Paper elevation={12} style={{ padding: '20px', marginTop: '20px' }} >
                 <div>
                     <TextField
                         required
@@ -170,7 +181,7 @@ export const Contact = () => {
                     onChange={handleChangeFile}
                 />
 
-                <Button variant="contained" disabled={!file || (!validatePhoneNumber(values.phone))} onClick={() => addContact()}>Submit</Button>
+                <Button variant="contained" disabled={!file || (!validatePhoneNumber(values.phone))} onClick={() => addContact()}>{editPage ? 'Edit' : 'Submit'}</Button>
 
                 {loader && <CircularProgress />}
 

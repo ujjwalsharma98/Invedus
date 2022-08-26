@@ -3,14 +3,11 @@ import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid'
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const Home = () => {
 
-    const location = useLocation();
     const navigate = useNavigate();
-
-    console.log(location.pathname);
 
     const columns = [
         { field: 'id', headerName: 'ID', width: 70 },
@@ -54,6 +51,7 @@ export const Home = () => {
     ];
 
     const [contactList, setContactList] = useState([])
+    const [mappedList, setMappedList] = useState([])
 
     useEffect(() => {
         getUpdatedList()
@@ -61,8 +59,9 @@ export const Home = () => {
 
     const getUpdatedList = () => {
         let list = JSON.parse(localStorage.getItem('contactList'))
-        let mappedList = list?.map((contact, index) => ({ ...contact, id: Number(index) + 1, isWhatsApp: contact.isWhatsApp ? 'Yes' : 'No', type: contact.type == 1 ? 'Personal' : 'Office' })) || []
-        setContactList(mappedList)
+        let mappedList = list?.map(contact => ({ ...contact, isWhatsApp: contact.isWhatsApp ? 'Yes' : 'No', type: contact.type == 1 ? 'Personal' : 'Office' })) || []
+        setContactList(list)
+        setMappedList(mappedList)
     }
 
     console.log({ contactList })
@@ -81,7 +80,7 @@ export const Home = () => {
             </div>
 
             <DataGrid
-                rows={contactList}
+                rows={mappedList}
                 columns={columns}
                 pageSize={5}
                 rowsPerPageOptions={[5]}

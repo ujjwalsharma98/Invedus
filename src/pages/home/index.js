@@ -6,6 +6,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import { useNavigate } from "react-router-dom";
+import Stack from '@mui/material/Stack';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
 const style = {
     position: 'absolute',
@@ -70,6 +73,8 @@ export const Home = () => {
     const [mappedList, setMappedList] = useState([])
     const [selectedId, setSelectedId] = useState(null)
     const [deletionModal, setDeletionModal] = useState(false)
+    const [openToaster, setOpenToaster] = React.useState(false);
+
 
     useEffect(() => {
         getUpdatedList()
@@ -87,6 +92,7 @@ export const Home = () => {
         localStorage.setItem("contactList", JSON.stringify(filteredArray));
         setDeletionModal(false)
         getUpdatedList()
+        setOpenToaster(true)
     }
 
     const deleteItem = (id) => {

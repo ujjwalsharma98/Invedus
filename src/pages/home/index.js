@@ -10,6 +10,10 @@ import Stack from '@mui/material/Stack';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 const style = {
     position: 'absolute',
     top: '50%',
@@ -82,7 +86,7 @@ export const Home = () => {
 
     const getUpdatedList = () => {
         let list = JSON.parse(localStorage.getItem('contactList'))
-        let mappedList = list?.map(contact => ({ ...contact, isWhatsApp: contact.isWhatsApp ? 'Yes' : 'No', type: contact.type == 1 ? 'Personal' : 'Office' })) || []
+        let mappedList = list?.map(contact => ({ ...contact, isWhatsApp: contact.isWhatsApp ? 'Yes' : 'No', type: contact.type == 1 ? 'Personal' : 'Office' })).sort((a, b) => a.userName.localeCompare(b.userName)) || []
         setContactList(list)
         setMappedList(mappedList)
     }
@@ -92,7 +96,15 @@ export const Home = () => {
         localStorage.setItem("contactList", JSON.stringify(filteredArray));
         setDeletionModal(false)
         getUpdatedList()
+        openAlert()
+    }
+
+    const openAlert = () => {
         setOpenToaster(true)
+    }
+
+    const closeAlert = () => {
+        setOpenToaster(false)
     }
 
     const deleteItem = (id) => {
@@ -122,12 +134,21 @@ export const Home = () => {
             >
                 <Box sx={{ ...style, width: 400 }}>
                     <h2 id="parent-modal-title">Do you want to delete this this?</h2>
-                    <div style={{ display: 'flex', justifyContent: 'space-around'}}>
+                    <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                         <Button variant="contained" onClick={() => deleteConfirmed()}>Yes</Button>
                         <Button variant="contained" onClick={() => setDeletionModal(false)}>No</Button>
                     </div>
                 </Box>
             </Modal>
+
+            <Stack spacing={2} sx={{ width: '100%' }}>
+                <Snackbar open={openToaster} autoHideDuration={6000} onClose={() => closeAlert()}>
+                    <Alert onClose={() => closeAlert()} severity="success" sx={{ width: '100%' }}>
+                        Deleted Successfully!
+                    </Alert>
+                </Snackbar>
+            </Stack>
+
         </div>
     )
 }

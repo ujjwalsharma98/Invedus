@@ -35,8 +35,6 @@ export const Contact = () => {
     const [loader, setLoader] = useState(false);
     const [editPage, setEditPage] = useState(false)
 
-    console.log("Looooo", values);
-
     useEffect(() => {
         if (location.pathname?.includes('edit')) {
             setEditPage(true)
@@ -176,13 +174,15 @@ export const Contact = () => {
                     />
                 </div>
 
-                <input
-                    type="file"
-                    onChange={handleChangeFile}
-                />
-
-                <Button variant="contained" disabled={!file || (!validatePhoneNumber(values.phone))} onClick={() => addContact()}>{editPage ? 'Edit' : 'Submit'}</Button>
-
+                <div>
+                    {!editPage && <input
+                        type="file"
+                        onChange={handleChangeFile}
+                    />}
+                    {editPage && <img src={values.image} width={200} height={200} alt='no image' />}
+                    <Button variant="contained" disabled={(!editPage && !file) || (!validatePhoneNumber(values.phone))} onClick={() => addContact()}>{editPage ? 'Edit' : 'Submit'}</Button>
+                </div>
+                
                 {loader && <CircularProgress />}
 
             </Paper>

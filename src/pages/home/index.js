@@ -77,7 +77,7 @@ export const Home = () => {
 
     const getUpdatedList = () => {
         let list = JSON.parse(localStorage.getItem('contactList'))
-        let mappedList = list?.map(contact => ({ ...contact, isWhatsApp: contact.isWhatsApp ? 'Yes' : 'No', type: contact.type == 1 ? 'Personal' : 'Office' })).sort((a, b) => a.userName.localeCompare(b.userName)) || []
+        let mappedList = list?.map(contact => ({ ...contact, isWhatsApp: contact.isWhatsApp ? 'Yes' : 'No', type: contact.type == 1 ? 'Personal' : 'Office' })) || []
         setContactList(list)
         setMappedList(mappedList)
     }

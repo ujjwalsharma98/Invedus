@@ -79,7 +79,6 @@ export const Home = () => {
     const [deletionModal, setDeletionModal] = useState(false)
     const [openToaster, setOpenToaster] = React.useState(false);
 
-
     useEffect(() => {
         getUpdatedList()
     }, [])

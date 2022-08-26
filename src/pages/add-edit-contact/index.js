@@ -13,7 +13,14 @@ import CircularProgress from '@mui/material/CircularProgress';
 import validator from 'validator'
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { v4 as uuidV4 } from 'uuid';
+import Stack from '@mui/material/Stack';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import { storage } from '../../firebase';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 let initialValue = {
     userName: '',
@@ -34,6 +41,7 @@ export const Contact = () => {
     const [file, setFile] = useState(null);
     const [loader, setLoader] = useState(false);
     const [editPage, setEditPage] = useState(false)
+    const [openToaster, setOpenToaster] = React.useState(false);
 
     useEffect(() => {
         if (location.pathname?.includes('edit')) {
@@ -94,6 +102,7 @@ export const Contact = () => {
         }
         setLoader(false)
         setValues(initialValue)
+        openAlert()
         navigate(`/`)
     }
 
@@ -109,6 +118,14 @@ export const Contact = () => {
         const url = await ref.getDownloadURL();
         setFile(null);
         return url
+    }
+
+    const openAlert = () => {
+        setOpenToaster(true)
+    }
+
+    const closeAlert = () => {
+        setOpenToaster(false)
     }
 
     return (
@@ -186,6 +203,14 @@ export const Contact = () => {
                 {loader && <CircularProgress />}
 
             </Paper>
+
+            <Stack spacing={2} sx={{ width: '100%' }}>
+                <Snackbar open={openToaster} autoHideDuration={6000} onClose={() => closeAlert()}>
+                    <Alert onClose={() => closeAlert()} severity="success" sx={{ width: '100%' }}>
+                        {editPage ? 'Added Successfully!' : 'Updated Successfully!'}
+                    </Alert>
+                </Snackbar>
+            </Stack>
         </Box>
     )
 }

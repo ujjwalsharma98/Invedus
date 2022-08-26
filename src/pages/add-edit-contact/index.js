@@ -183,7 +183,7 @@ export const Contact = () => {
                         control={
                             <Checkbox
                                 name='isWhatsApp'
-                                value={values.isWhatsApp}
+                                checked={values.isWhatsApp}
                                 onChange={(e) => handleChange(e)}
                                 inputProps={{ 'aria-label': 'controlled' }}
                             />

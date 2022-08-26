@@ -3,11 +3,12 @@ import Button from '@mui/material/Button';
 import { DataGrid } from '@mui/x-data-grid'
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from "react-router-dom";
 
-const Home = () => {
+export const Home = () => {
 
     const location = useLocation();
+    const navigate = useNavigate();
 
     console.log(location.pathname);
 
@@ -44,7 +45,7 @@ const Home = () => {
             renderCell: (params) => {
                 return (
                     <div>
-                        <EditIcon onClick={() => updateItem(params?.row?.id)} />
+                        <EditIcon onClick={() => navigate(`/edit-contact/${params?.row?.id}`)} />
                         <DeleteIcon onClick={() => deleteItem(params?.row?.id)} />
                     </div>
                 )
@@ -60,7 +61,7 @@ const Home = () => {
 
     const getUpdatedList = () => {
         let list = JSON.parse(localStorage.getItem('contactList'))
-        let mappedList = list?.map((contact, index) => ({ ...contact, id: Number(index)+1, isWhatsApp: contact.isWhatsApp ? 'Yes' : 'No', type: contact.type == 1 ? 'Personal' : 'office' })) || []
+        let mappedList = list?.map((contact, index) => ({ ...contact, id: Number(index) + 1, isWhatsApp: contact.isWhatsApp ? 'Yes' : 'No', type: contact.type == 1 ? 'Personal' : 'Office' })) || []
         setContactList(mappedList)
     }
 
@@ -72,15 +73,11 @@ const Home = () => {
         getUpdatedList()
     }
 
-    const updateItem = (id) => {
-
-    }
-
     return (
         <div style={{ height: 400, width: 800 }}>
 
             <div>
-                <Button variant="contained" onClick={() => { }}>Add Contact</Button>
+                <Button variant="contained" onClick={() => navigate(`/add-contact`)}>Add Contact</Button>
             </div>
 
             <DataGrid
@@ -92,5 +89,3 @@ const Home = () => {
         </div>
     )
 }
-
-export default Home

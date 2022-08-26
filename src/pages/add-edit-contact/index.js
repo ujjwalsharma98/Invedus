@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -10,7 +11,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import validator from 'validator'
-import { useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { storage } from '../../firebase';
 
 let initialValue = {
@@ -21,15 +22,28 @@ let initialValue = {
     isWhatsApp: false
 }
 
-const Contact = () => {
+export const Contact = () => {
 
     const location = useLocation();
-
-    console.log(location.pathname);
+    const navigate = useNavigate();
+    const { id } = useParams();
 
     const [values, setValues] = useState(initialValue)
     const [file, setFile] = useState(null);
     const [loader, setLoader] = useState(false);
+    const [editPage, setEditPage] = useState(false)
+
+    // console.log("Looooo", values);
+
+    useEffect(() => {
+        if (location.pathname?.includes('edit')) {
+            setEditPage(true)
+
+            let dataEdit = JSON.parse(localStorage.getItem('contactList'))  
+            setValues(dataEdit[0])
+            console.log("REACHED >>>", id, dataEdit)
+        }
+    }, [])
 
     const handleChange = (e) => {
         let { name, value, checked } = e.target
@@ -71,6 +85,7 @@ const Contact = () => {
         localStorage.setItem("contactList", JSON.stringify(updatedList));
         setLoader(false)
         setValues(initialValue)
+        navigate(`/`)
     }
 
     function handleChangeFile(e) {
@@ -97,66 +112,69 @@ const Contact = () => {
             autoComplete="off"
         >
             <div>
-                <TextField
-                    required
-                    label="Name"
-                    name='userName'
-                    value={values.userName}
-                    onChange={(e) => handleChange(e)}
-                />
-                <TextField
-                    required
-                    label="Phone Number"
-                    type="number"
-                    name='phone'
-                    helperText={(validatePhoneNumber(values.phone) || values.phone == null)  ? '' : 'Invalid'}
-                    id="outlined-error-helper-text"
-                    error={(validatePhoneNumber(values.phone) || values.phone == null) ? false : true}
-                    value={values.phone}
-                    onChange={(e) => handleChange(e)}
-                />
+                <Button variant="contained" onClick={() => navigate(`/`)}>Go Back</Button>
             </div>
-
-            <div>
-                <FormControl style={{minWidth: 210}}>
-                    <InputLabel id="demo-simple-select-label">Type</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        name='type'
-                        value={values.type}
-                        label="Type"
+            <Paper elevation={12} style={{ padding: '20px', marginTop: '20px'}} >
+                <div>
+                    <TextField
+                        required
+                        label="Name"
+                        name='userName'
+                        value={values.userName}
                         onChange={(e) => handleChange(e)}
-                    >
-                        <MenuItem value={1}>personal</MenuItem>
-                        <MenuItem value={2}>office</MenuItem>
-                    </Select>
-                </FormControl>
+                    />
+                    <TextField
+                        required
+                        label="Phone Number"
+                        type="number"
+                        name='phone'
+                        helperText={(validatePhoneNumber(values.phone) || values.phone == null) ? '' : 'Invalid'}
+                        id="outlined-error-helper-text"
+                        error={(validatePhoneNumber(values.phone) || values.phone == null) ? false : true}
+                        value={values.phone}
+                        onChange={(e) => handleChange(e)}
+                    />
+                </div>
 
-                <FormControlLabel
-                    label="Available on whatsapp"
-                    control={
-                        <Checkbox
-                            name='isWhatsApp'
-                            value={values.isWhatsApp}
+                <div>
+                    <FormControl style={{ minWidth: 210 }}>
+                        <InputLabel id="demo-simple-select-label">Type</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            name='type'
+                            value={values.type}
+                            label="Type"
                             onChange={(e) => handleChange(e)}
-                            inputProps={{ 'aria-label': 'controlled' }}
-                        />
-                    }
+                        >
+                            <MenuItem value={1}>personal</MenuItem>
+                            <MenuItem value={2}>office</MenuItem>
+                        </Select>
+                    </FormControl>
+
+                    <FormControlLabel
+                        label="Available on whatsapp"
+                        control={
+                            <Checkbox
+                                name='isWhatsApp'
+                                value={values.isWhatsApp}
+                                onChange={(e) => handleChange(e)}
+                                inputProps={{ 'aria-label': 'controlled' }}
+                            />
+                        }
+                    />
+                </div>
+
+                <input
+                    type="file"
+                    onChange={handleChangeFile}
                 />
-            </div>
 
-            <input
-                type="file"
-                onChange={handleChangeFile}
-            />
+                <Button variant="contained" disabled={!file || (!validatePhoneNumber(values.phone))} onClick={() => addContact()}>Submit</Button>
 
-            <Button variant="contained" disabled={!file || (!validatePhoneNumber(values.phone))} onClick={() => addContact()}>Submit</Button>
+                {loader && <CircularProgress />}
 
-            {loader && <CircularProgress />}
-
+            </Paper>
         </Box>
     )
 }
-
-export default Contact

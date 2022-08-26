@@ -141,7 +141,7 @@ export const Contact = () => {
                 <Button variant="contained" onClick={() => navigate(`/`)}>Go Back</Button>
             </div>
             <Paper elevation={12} style={{ padding: '20px', marginTop: '20px' }} >
-                <div>
+                <div style={{ height: 250, display: 'flex', justifyContent: 'space-around' }}>
                     <TextField
                         required
                         label="Name"
@@ -160,10 +160,8 @@ export const Contact = () => {
                         value={values.phone}
                         onChange={(e) => handleChange(e)}
                     />
-                </div>
 
-                <div>
-                    <FormControl style={{ minWidth: 210 }}>
+                    <FormControl style={{ minWidth: 210, marginTop: 8 }}>
                         <InputLabel id="demo-simple-select-label">Type</InputLabel>
                         <Select
                             labelId="demo-simple-select-label"
@@ -180,6 +178,7 @@ export const Contact = () => {
 
                     <FormControlLabel
                         label="Available on whatsapp"
+                        style={{ marginBottom: 160 }}
                         control={
                             <Checkbox
                                 name='isWhatsApp'
@@ -189,17 +188,15 @@ export const Contact = () => {
                             />
                         }
                     />
-                </div>
-
-                <div>
                     {!editPage && <input
                         type="file"
                         onChange={handleChangeFile}
                     />}
                     {editPage && <img src={values.image} width={200} height={200} alt='no image' />}
-                    <Button variant="contained" disabled={(!editPage && !file) || (!validatePhoneNumber(values.phone))} onClick={() => addContact()}>{editPage ? 'Edit' : 'Submit'}</Button>
                 </div>
-                
+
+                <Button variant="contained" disabled={(!editPage && !file) || (!validatePhoneNumber(values.phone))} onClick={() => addContact()}>{editPage ? 'Edit' : 'Submit'}</Button>
+
                 {loader && <CircularProgress />}
 
             </Paper>
